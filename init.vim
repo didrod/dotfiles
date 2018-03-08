@@ -8,6 +8,7 @@ Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'w0rp/ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'embear/vim-localvimrc'
 
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'zchee/deoplete-jedi'
@@ -62,6 +63,16 @@ highlight clear SignColumn
 let g:ale_linters = {
 \   'haskell': ['stack-build', 'stack-ghc-mod', 'hlint', 'hdevtools'],
 \}
+"
+" --------------------------------------------------------------------------------------------------
+
+
+" --------------------------------------------------------------------------------------------------
+"
+" Local vimrc
+"
+let g:localvimrc_ask = 0
+let g:localvimrc_count = 1
 "
 " --------------------------------------------------------------------------------------------------
 
