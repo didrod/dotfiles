@@ -86,6 +86,11 @@ if [ -n "$INSTALL_TMUX" ]; then
     sh -c "cd tmux-*; ./configure; make -j$MAX_THREAD_COUNT; sudo make install"
 fi
 
+# create nvim config directory if doesn't exist
+if [ ! -d $HOME/.config/nvim ]; then
+    mkdir -p $HOME/.config/nvim
+fi
+
 cp $DOTFILES_DIR/init.vim $HOME/.config/nvim/init.vim
 cp $DOTFILES_DIR/tmux.conf $HOME/.tmux.conf
 cp $DOTFILES_DIR/zshrc $HOME/.zshrc.didrod
