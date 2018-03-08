@@ -1,6 +1,33 @@
+#!/bin/bash
+
 # Constants
 MAX_THREAD_COUNT=$(grep -c ^processor /proc/cpuinfo)
 DOTFILES_DIR=$(realpath $(dirname "$0"))
+
+function version_is_at_least() {
+    local cmd=${1}
+    local version_least=${2}
+    local version_flag
+
+    if [ -z "$3" ]; then
+        version_flag="--version"
+    else
+        version_flag=${3}
+    fi
+
+    if [ $(command -v $cmd) ]; then
+        local version=$($cmd $version_flag | grep -o -P "\d+(\.\d+)*" | head -1)
+        if [ -n "$version" ]; then
+            local result=$(zsh -c "
+                autoload is-at-least;
+                is-at-least $version_least $version && echo true
+            ")
+            echo $result
+        fi
+    else
+        echo
+    fi
+}
 
 # Get sudo credential at the start of the script.
 sudo true
@@ -50,21 +77,8 @@ if [ ! $(command -v nvim) ]; then
     sh -c "cd neovim; make -j$MAX_THREAD_COUNT CMAKE_BUILD_TYPE=RelWithDebInfo; sudo make install"
 fi
 
-# check if we should install tmux
-if [ ! $(command -v tmux) ]; then
-    INSTALL_TMUX=true
-else
-    # if tmux is already installed, check its version
-    TMUX_VERSION=$(tmux -V | grep -o -P "\d+(\.\d+)?" | head -1)
-    if [ -z "$TMUX_VERSION" ]; then
-        INSTALL_TMUX=true
-    else
-        INSTALL_TMUX=$(zsh -c "autoload is-at-least; is-at-least 2.6 $TMUX_VERSION || echo true")
-    fi
-fi
-
 # install tmux
-if [ -n "$INSTALL_TMUX" ]; then
+if [ -z "$(version_is_at_least tmux 2.6 -V)" ]; then
     echo "installing tmux.."
 
     # install build prerequisites
@@ -84,6 +98,34 @@ if [ -n "$INSTALL_TMUX" ]; then
         | wget -i - -O tmux.tar.gz
     tar xvf tmux.tar.gz
     sh -c "cd tmux-*; ./configure; make -j$MAX_THREAD_COUNT; sudo make install"
+fi
+
+# install llvm to /opt/llvm
+if [ -z "$(version_is_at_least /opt/llvm/bin/clang 5.0.1)" ]; then
+    if [ ! -d /opt/llvm ]; then
+        sudo mkdir -p /opt/llvm
+    fi
+
+    rm -rf clang*
+    rm -rf llvm*
+    if [ -x $(command -v apt) ]; then
+        # use prebuilt binary for ubuntu
+        wget http://releases.llvm.org/5.0.1/clang+llvm-5.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz -O clang.tar.xz
+        sh -c "tar xvf clang*; cd clang*; sudo cp -R * /opt/llvm"
+        rm -rf clang*
+    elif [ -x $(command -v pacman) ]; then
+        wget http://releases.llvm.org/5.0.1/llvm-5.0.1.src.tar.xz llvm.src.tar.xz
+        sh -c \
+        "
+            tar xvf llvm*;
+            cd llvm*;
+            mkdir build;
+            cd build;
+            cmake -DCMAKE_INSTALL_PREFIX=/opt/llvm ..;
+            make -j$MAX_THREAD_COUNT;
+            sudo make install
+        "
+    fi
 fi
 
 # create nvim config directory if doesn't exist
