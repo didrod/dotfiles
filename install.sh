@@ -29,6 +29,46 @@ function version_is_at_least() {
     fi
 }
 
+# =================================================================================================
+# Set cli option flags
+# https://gist.github.com/cosimo/3760587
+# =================================================================================================
+eval set -- `getopt -o dyn --long docker,skip-confirm,skip-nvim-plugin-install -- "$@"`
+
+if [ $? != 0 ]; then
+    echo \
+"
+Usage: $0 [options]
+
+Options:
+  -d, --docker                      enable docker mode. equivalent with '-ny'
+  -y, --skip-confirm                skip apt install confirmation
+  -n, --skip-nvim-plugin-install    skip automatic nvim plugin installation
+"
+    exit 1
+fi
+
+while true; do
+  case "$1" in
+    -d | --docker )
+        SKIP_APT_CONFIRMATION='-y'
+        SKIP_AUTO_NVIM_PLUGIN_INSTALLATION=true
+        shift;;
+    -y | --skip-confirm )
+        SKIP_APT_CONFIRMATION='-y'
+        shift;;
+    -n | --skip-nvim-plugin-install )
+        SKIP_AUTO_NVIM_PLUGIN_INSTALLATION=true
+        shift;;
+    -- )
+        shift
+        break;;
+    * )
+        break;;
+  esac
+done
+# =================================================================================================
+
 # Get sudo credential at the start of the script.
 sudo true
 
@@ -52,7 +92,7 @@ if [ ! -d $HOME/.pyenv ]; then
 
     # https://github.com/pyenv/pyenv/wiki/Common-build-problems#requirements
     if [ -x $(command -v apt) ]; then
-        sudo apt-get install make build-essential libssl-dev zlib1g-dev libbz2-dev \
+        sudo apt install $SKIP_APT_CONFIRMATION make build-essential libssl-dev zlib1g-dev libbz2-dev \
         libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
         xz-utils tk-dev
     # https://aur.archlinux.org/packages/python-git#pkgdeps
@@ -68,7 +108,8 @@ if [ ! $(command -v nvim) ]; then
 
     # install build prerequisites(https://github.com/neovim/neovim/wiki/Building-Neovim#build-prerequisites)
     if [ -x $(command -v apt) ]; then
-        sudo apt install ninja-build libtool libtool-bin autoconf automake cmake g++ pkg-config unzip
+        sudo apt install $SKIP_APT_CONFIRMATION \
+             ninja-build libtool libtool-bin autoconf automake cmake g++ pkg-config unzip
     elif [ -x $(command -v pacman) ]; then
         sudo pacman -S base-devel cmake unzip ninja
     fi
@@ -83,7 +124,7 @@ if [ -z "$(version_is_at_least tmux 2.6 -V)" ]; then
 
     # install build prerequisites
     if [ -x $(command -v apt) ]; then
-        sudo apt install libevent-dev libncurses5-dev
+        sudo apt install $SKIP_APT_CONFIRMATION libevent-dev libncurses5-dev
     elif [ -x $(command -v pacman) ]; then
         sudo pacman -S libevent ncurses
     fi
@@ -167,4 +208,7 @@ if [ ! -f $HOME/.local/share/nvim/site/autoload/plug.vim ]; then
     curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
-nvim +:PlugInstall
+
+if [ -z "$SKIP_AUTO_NVIM_PLUGIN_INSTALLATION" ]; then
+    nvim +:PlugInstall
+fi
