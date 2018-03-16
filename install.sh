@@ -210,5 +210,5 @@ if [ ! -f $HOME/.local/share/nvim/site/autoload/plug.vim ]; then
 fi
 
 if [ -z "$SKIP_AUTO_NVIM_PLUGIN_INSTALLATION" ]; then
-    nvim +:PlugInstall
+    nvim -c :PlugInstall -c qa
 fi
