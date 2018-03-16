@@ -189,6 +189,7 @@ fi
 
 PATH="$HOME/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 
 if [ ! -d $HOME/.pyenv/versions/neovim2 ]; then
     pyenv install 2.7.14 --verbose
