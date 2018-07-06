@@ -3,6 +3,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'chriskempson/base16-vim'
+Plug 'miyakogi/seiya.vim'
 
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'w0rp/ale'
@@ -26,6 +27,15 @@ set statusline+=%#warningmsg#
 set statusline+=%*
 
 let g:airline_powerline_fonts = 1
+"
+" --------------------------------------------------------------------------------------------------
+
+
+" --------------------------------------------------------------------------------------------------
+"
+" Seiya
+"
+let g:seiya_target_groups = has('nvim') ? ['guibg'] : ['ctermbg']
 "
 " --------------------------------------------------------------------------------------------------
 
@@ -92,6 +102,8 @@ let NERDTreeIgnore = ['\.pyc$', '^__pycache__$']
 "
 map <C-n> :NERDTreeToggle<CR>
 map <C-h> :set hlsearch!<CR>
+map <F8> :SeiyaEnable<CR>
+map <F7> :SeiyaDisable<CR>
 imap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 "
 " --------------------------------------------------------------------------------------------------
