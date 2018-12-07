@@ -16,6 +16,9 @@ Plug 'zchee/deoplete-jedi'
 Plug 'zchee/deoplete-clang'
 Plug 'eagletmt/neco-ghc'
 
+Plug 'idanarye/vim-vebugger'
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+
 call plug#end()
 
 
@@ -102,9 +105,9 @@ let NERDTreeIgnore = ['\.pyc$', '^__pycache__$']
 "
 map <C-n> :NERDTreeToggle<CR>
 map <C-h> :set hlsearch!<CR>
-map <F8> :SeiyaEnable<CR>
-map <F7> :SeiyaDisable<CR>
+map <F10> :VBGstart
 imap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+let g:vebugger_leader='<C-c>'
 "
 " --------------------------------------------------------------------------------------------------
 
