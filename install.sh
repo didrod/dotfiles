@@ -109,12 +109,12 @@ if [ ! $(command -v nvim) ]; then
     # install build prerequisites(https://github.com/neovim/neovim/wiki/Building-Neovim#build-prerequisites)
     if [ -x $(command -v apt) ]; then
         sudo apt install $SKIP_APT_CONFIRMATION \
-             ninja-build libtool libtool-bin autoconf automake cmake g++ pkg-config unzip
+             ninja-build libtool libtool-bin autoconf automake cmake g++ pkg-config unzip gettext
     elif [ -x $(command -v pacman) ]; then
-        sudo pacman -S base-devel cmake unzip ninja
+        sudo pacman -S base-devel cmake unzip ninja gettext
     fi
 
-    git clone https://github.com/neovim/neovim neovim
+    git clone -b v0.3.2 https://github.com/neovim/neovim neovim
     sh -c "cd neovim; make -j$MAX_THREAD_COUNT CMAKE_BUILD_TYPE=RelWithDebInfo; sudo make install"
 fi
 
