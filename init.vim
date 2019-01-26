@@ -127,7 +127,7 @@ let g:python3_host_prog=expand('~/.pyenv/versions/neovim3/bin/python3')
 " Set colorscheme
 "
 try
-    colorscheme base16-monokai
+    colorscheme base16-material-palenight
 catch /^Vim\%((\a\+)\)\=:E185/
 endtry
 "
