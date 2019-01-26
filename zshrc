@@ -4,5 +4,11 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 export PATH="$HOME/.local/bin:/opt/llvm/bin:$PATH"
 
-eval $(dircolors -b $HOME/.didrod-dotfile-packages/dircolors-solarized/dircolors.ansi-dark)
 alias vim=nvim
+
+# Set base16_monokai colorscheme
+BASE16_SHELL="$HOME/.didrod-dotfile-packages/base16-shell/"
+[ -n "$PS1" ] && \
+    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
+        eval "$("$BASE16_SHELL/profile_helper.sh")"
+base16_monokai

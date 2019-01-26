@@ -80,9 +80,9 @@ cd $HOME/.didrod-dotfile-packages
 # install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
-# install dircolors-solarized
-if [ ! -d dircolors-solarized ]; then
-    git clone https://github.com/seebi/dircolors-solarized dircolors-solarized
+# install base16-shell
+if [ ! -d base16-shell ]; then
+    git clone https://github.com/chriskempson/base16-shell base16-shell
 fi
 
 # install pyenv
