@@ -164,15 +164,19 @@ if [ -z "$(version_is_at_least /opt/llvm/bin/clang 7.0.1)" ]; then
         sh -c "tar xvf clang* && cd clang* && sudo cp -R * /opt/llvm"
         rm -rf clang*
     elif [ $(command -v pacman) ]; then
-        wget http://releases.llvm.org/7.0.1/llvm-7.0.1.src.tar.xz llvm.src.tar.xz
-        sh -c \
-        "
-            tar xvf llvm*;
-            cd llvm*;
-            mkdir build;
-            cd build;
-            cmake -DCMAKE_INSTALL_PREFIX=/opt/llvm ..;
-            make -j$MAX_THREAD_COUNT;
+        sudo pacman -S binutils
+        wget http://releases.llvm.org/7.0.1/llvm-7.0.1.src.tar.xz -O llvm.src.tar.xz
+        sh -c "
+            tar xvf llvm.src.tar.xz && \
+            cd llvm-7.0.1.src && \
+            mkdir build && \
+            cd build && \
+            cmake \
+                -DCMAKE_INSTALL_PREFIX=/opt/llvm \
+                -DLLVM_USE_LINKER=gold \
+                -DCMAKE_BUILD_TYPE=Release \
+                .. && \
+            make -j$MAX_THREAD_COUNT && \
             sudo make install
         "
     fi
