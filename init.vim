@@ -39,6 +39,7 @@ let g:airline_powerline_fonts = 1
 " Seiya
 "
 let g:seiya_target_groups = has('nvim') ? ['guibg'] : ['ctermbg']
+let g:seiya_auto_enable = 1
 "
 " --------------------------------------------------------------------------------------------------
 
@@ -105,6 +106,8 @@ let NERDTreeIgnore = ['\.pyc$', '^__pycache__$']
 "
 map <C-n> :NERDTreeToggle<CR>
 map <C-h> :set hlsearch!<CR>
+map <F8> :SeiyaEnable<CR>
+map <F7> :SeiyaDisable<CR>
 map <F10> :VBGstart
 imap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 let g:vebugger_leader='<C-c>'
