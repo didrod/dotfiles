@@ -103,7 +103,7 @@ if [ ! -d $HOME/.pyenv ]; then
 fi
 
 # install neovim
-if [ ! $(command -v nvim) ]; then
+if [ -z "$(version_is_at_least nvim 0.3.4)" ]; then
     echo "installing neovim.."
 
     # install build prerequisites(https://github.com/neovim/neovim/wiki/Building-Neovim#build-prerequisites)
@@ -114,12 +114,12 @@ if [ ! $(command -v nvim) ]; then
         sudo pacman -S base-devel cmake unzip ninja gettext
     fi
 
-    git clone -b v0.3.2 https://github.com/neovim/neovim neovim
+    git clone -b v0.3.4 https://github.com/neovim/neovim neovim
     sh -c "cd neovim; make -j$MAX_THREAD_COUNT CMAKE_BUILD_TYPE=RelWithDebInfo; sudo make install"
 fi
 
 # install tmux
-if [ -z "$(version_is_at_least tmux 2.6 -V)" ]; then
+if [ -z "$(version_is_at_least tmux 2.8 -V)" ]; then
     echo "installing tmux.."
 
     # install build prerequisites
@@ -142,7 +142,7 @@ if [ -z "$(version_is_at_least tmux 2.6 -V)" ]; then
 fi
 
 # install llvm to /opt/llvm
-if [ -z "$(version_is_at_least /opt/llvm/bin/clang 5.0.1)" ]; then
+if [ -z "$(version_is_at_least /opt/llvm/bin/clang 7.0.1)" ]; then
     if [ ! -d /opt/llvm ]; then
         sudo mkdir -p /opt/llvm
     fi
@@ -151,11 +151,11 @@ if [ -z "$(version_is_at_least /opt/llvm/bin/clang 5.0.1)" ]; then
     rm -rf llvm*
     if [ $(command -v apt) ]; then
         # use prebuilt binary for ubuntu
-        wget http://releases.llvm.org/5.0.1/clang+llvm-5.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz -O clang.tar.xz
+        wget http://releases.llvm.org/7.0.1/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz -O clang.tar.xz
         sh -c "tar xvf clang*; cd clang*; sudo cp -R * /opt/llvm"
         rm -rf clang*
     elif [ $(command -v pacman) ]; then
-        wget http://releases.llvm.org/5.0.1/llvm-5.0.1.src.tar.xz llvm.src.tar.xz
+        wget http://releases.llvm.org/7.0.1/llvm-7.0.1.src.tar.xz llvm.src.tar.xz
         sh -c \
         "
             tar xvf llvm*;
@@ -192,15 +192,15 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
 if [ ! -d $HOME/.pyenv/versions/neovim2 ]; then
-    pyenv install 2.7.14 --verbose
-    pyenv virtualenv 2.7.14 neovim2
+    pyenv install 2.7.15 --verbose
+    pyenv virtualenv 2.7.15 neovim2
     pyenv activate neovim2
     pip install neovim
 fi
 
 if [ ! -d $HOME/.pyenv/versions/neovim3 ]; then
-    pyenv install 3.6.4 --verbose
-    pyenv virtualenv 3.6.4 neovim3
+    pyenv install 3.7.2 --verbose
+    pyenv virtualenv 3.7.2 neovim3
     pyenv activate neovim3
     pip install neovim
 fi
