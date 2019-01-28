@@ -115,7 +115,11 @@ if [ -z "$(version_is_at_least nvim 0.3.4)" ]; then
     fi
 
     git clone -b v0.3.4 https://github.com/neovim/neovim neovim
-    sh -c "cd neovim; make -j$MAX_THREAD_COUNT CMAKE_BUILD_TYPE=RelWithDebInfo; sudo make install"
+    sh -c "
+        cd neovim && \
+        make -j$MAX_THREAD_COUNT CMAKE_BUILD_TYPE=RelWithDebInfo && \
+        sudo make install
+    "
 fi
 
 # install tmux
@@ -138,7 +142,12 @@ if [ -z "$(version_is_at_least tmux 2.8 -V)" ]; then
         | tr -d \" \
         | wget -i - -O tmux.tar.gz
     tar xvf tmux.tar.gz
-    sh -c "cd tmux-*; ./configure; make -j$MAX_THREAD_COUNT; sudo make install"
+    sh -c "
+        cd tmux-* && \
+        ./configure && \
+        make -j$MAX_THREAD_COUNT && \
+        sudo make install
+    "
 fi
 
 # install llvm to /opt/llvm
@@ -152,7 +161,7 @@ if [ -z "$(version_is_at_least /opt/llvm/bin/clang 7.0.1)" ]; then
     if [ $(command -v apt) ]; then
         # use prebuilt binary for ubuntu
         wget http://releases.llvm.org/7.0.1/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz -O clang.tar.xz
-        sh -c "tar xvf clang*; cd clang*; sudo cp -R * /opt/llvm"
+        sh -c "tar xvf clang* && cd clang* && sudo cp -R * /opt/llvm"
         rm -rf clang*
     elif [ $(command -v pacman) ]; then
         wget http://releases.llvm.org/7.0.1/llvm-7.0.1.src.tar.xz llvm.src.tar.xz
