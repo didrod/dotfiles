@@ -91,12 +91,12 @@ if [ ! -d $HOME/.pyenv ]; then
     curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
 
     # https://github.com/pyenv/pyenv/wiki/Common-build-problems#requirements
-    if [ -x $(command -v apt) ]; then
+    if [ $(command -v apt) ]; then
         sudo apt install $SKIP_APT_CONFIRMATION make build-essential libssl-dev zlib1g-dev libbz2-dev \
         libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
         xz-utils tk-dev
     # https://aur.archlinux.org/packages/python-git#pkgdeps
-    elif [ -x $(command -v pacman) ]; then
+    elif [ $(command -v pacman) ]; then
         sudo pacman -S bzip2 expat gdbm libffi openssl zlib bluez-libs git sqlite \
         valgrind xz tk libtirpc
     fi
@@ -107,10 +107,10 @@ if [ ! $(command -v nvim) ]; then
     echo "installing neovim.."
 
     # install build prerequisites(https://github.com/neovim/neovim/wiki/Building-Neovim#build-prerequisites)
-    if [ -x $(command -v apt) ]; then
+    if [ $(command -v apt) ]; then
         sudo apt install $SKIP_APT_CONFIRMATION \
              ninja-build libtool libtool-bin autoconf automake cmake g++ pkg-config unzip gettext
-    elif [ -x $(command -v pacman) ]; then
+    elif [ $(command -v pacman) ]; then
         sudo pacman -S base-devel cmake unzip ninja gettext
     fi
 
@@ -123,9 +123,9 @@ if [ -z "$(version_is_at_least tmux 2.6 -V)" ]; then
     echo "installing tmux.."
 
     # install build prerequisites
-    if [ -x $(command -v apt) ]; then
+    if [ $(command -v apt) ]; then
         sudo apt install $SKIP_APT_CONFIRMATION libevent-dev libncurses5-dev
-    elif [ -x $(command -v pacman) ]; then
+    elif [ $(command -v pacman) ]; then
         sudo pacman -S libevent ncurses
     fi
 
@@ -149,12 +149,12 @@ if [ -z "$(version_is_at_least /opt/llvm/bin/clang 5.0.1)" ]; then
 
     rm -rf clang*
     rm -rf llvm*
-    if [ -x $(command -v apt) ]; then
+    if [ $(command -v apt) ]; then
         # use prebuilt binary for ubuntu
         wget http://releases.llvm.org/5.0.1/clang+llvm-5.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz -O clang.tar.xz
         sh -c "tar xvf clang*; cd clang*; sudo cp -R * /opt/llvm"
         rm -rf clang*
-    elif [ -x $(command -v pacman) ]; then
+    elif [ $(command -v pacman) ]; then
         wget http://releases.llvm.org/5.0.1/llvm-5.0.1.src.tar.xz llvm.src.tar.xz
         sh -c \
         "
